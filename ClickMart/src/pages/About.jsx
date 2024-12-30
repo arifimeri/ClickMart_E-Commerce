@@ -1,6 +1,6 @@
 import React from "react";
 import Title from "../components/Title";
-import { assets } from "../dist/assets/assets";
+import { assets } from "../assets/assets";
 import NewsletterBox from "../components/NewsletterBox";
 
 const About = () => {

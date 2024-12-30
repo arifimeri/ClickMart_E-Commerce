@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   
 } from "@fortawesome/free-solid-svg-icons";
-import { assets } from "../assets/assets";
+import { assets } from "../dist/assets/assets";
 import { ShopContext } from "../context/ShopContext";
 
 

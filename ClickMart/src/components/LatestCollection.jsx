@@ -6,11 +6,8 @@ import ProductItem from "./ProductItem";
 
 const LatestCollection = () => {
   const { products } = useContext(ShopContext);
-  const [LatestProducts, setLatestProducts] = useState([]);
-
-  useEffect(() => {
-    setLatestProducts(products.slice(0, 10));
-  }, []);
+  
+  const LatestProducts = products.slice( 0, 10);
 
   return (
     <div className="my-10">
@@ -24,9 +21,9 @@ const LatestCollection = () => {
 
       {/*Rendering Products */}
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 gap-y-6">
-        {LatestProducts.map((item, index) => (
+        {LatestProducts.map((item) => (
           <ProductItem
-            key={index}
+            key={item._id}
             id={item._id}
             image={item.image}
             name={item.name}

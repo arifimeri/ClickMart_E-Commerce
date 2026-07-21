@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { assets } from "../assets/assets";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faMagnifyingGlass,
@@ -13,15 +13,18 @@ import { ShopContext } from "../context/ShopContext";
 
 const Navbar = () => {
   const [visible, setVisible] = useState(false);
+  const navigate = useNavigate();
 
-  const {setShowSearch, getCartCount} = useContext(ShopContext);
+  // Marrim shtetet dhe funksionet e reja nga ShopContext
+  const { setShowSearch, getCartCount, user, logout } = useContext(ShopContext);
 
   return (
     <div className="flex items-center justify-between py-5 font-medium">
       <Link to={"/"}>
-        {" "}
-        <img className=" inline-flex" src={assets.logo} style={{ width: "60px" }} alt="Logo" /> <h1 className=" inline-flex font-medium" >ClickMart</h1>
+        <img className=" inline-flex" src={assets.logo} style={{ width: "60px" }} alt="Logo" /> 
+        <h1 className=" inline-flex font-medium" >ClickMart</h1>
       </Link>
+      
       <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
         <NavLink to="/" className="flex flex-col items-center gap-1">
           <p>Home</p>
@@ -40,6 +43,7 @@ const Navbar = () => {
           <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
         </NavLink>
       </ul>
+
       <div className="flex items-center gap-6">
         <FontAwesomeIcon
           icon={faMagnifyingGlass}
@@ -47,21 +51,40 @@ const Navbar = () => {
           style={{ color: "#000000", fontSize: 20 }}
           className="w-5 cursor-pointer"
         />
-        <div className="group relative">
-          <Link to={'/login'}><FontAwesomeIcon
+        
+        {/* Grupi i Profilit i modifikuar */}
+        <div className="group relative flex items-center gap-2">
+          {/* Shfaq emrin nëse user-i ekziston */}
+          {user && (
+            <span className="text-sm text-gray-700 hidden md:inline">
+              Hi, {user.user_metadata?.display_name || "User"}
+            </span>
+          )}
+
+          {/* Nëse është i kyçur nuk e çon te /login, thjesht shërben si hapës i dropdown-it */}
+          <FontAwesomeIcon
             icon={faUser}
             size="sm"
             style={{ color: "#000000", fontSize: 20 }}
             className="w-10 cursor-pointer"
-          /></Link>
-          <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
-            <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded">
-              <p className="cursor-pointer hover:text-black">My Profile</p>
-              <p className="cursor-pointer hover:text-black">Orders</p>
-              <p className="cursor-pointer hover:text-black">Logout</p>
+            onClick={() => !user && navigate('/login')}
+          />
+          
+          <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4 top-5 z-50">
+            <div className="flex flex-col gap-2 w-36 py-3 px-5 bg-slate-100 text-gray-500 rounded shadow-md">
+              {user ? (
+                <>
+                  <p onClick={() => navigate('/profile')} className="cursor-pointer hover:text-black">My Profile</p>
+                  <p onClick={() => navigate('/orders')} className="cursor-pointer hover:text-black">Orders</p>
+                  <p onClick={logout} className="cursor-pointer hover:text-black">Logout</p>
+                </>
+              ) : (
+                <p onClick={() => navigate('/login')} className="cursor-pointer hover:text-black">Login</p>
+              )}
             </div>
           </div>
         </div>
+
         <Link to="/cart" className="relative">
           <FontAwesomeIcon
             icon={faBagShopping}
@@ -80,7 +103,7 @@ const Navbar = () => {
         />
       </div>
 
-      {/*Sidebar menu for small screens*/}
+      {/* Sidebar menu për ekrane të vegjël */}
       <div
         className={`absolute top-0 right-0 bottom-0 overflow-hidden bg-white transition-all ${
           visible ? "w-full" : "w-0"
@@ -98,34 +121,10 @@ const Navbar = () => {
             />
             <p>Back</p>
           </div>
-          <NavLink
-            onClick={() => setVisible(false)}
-            className="py-2 pl-6 border"
-            to="/"
-          >
-            Home
-          </NavLink>
-          <NavLink
-            onClick={() => setVisible(false)}
-            className="py-2 pl-6 border"
-            to="/collection"
-          >
-            Collection
-          </NavLink>
-          <NavLink
-            onClick={() => setVisible(false)}
-            className="py-2 pl-6 border"
-            to="/about"
-          >
-            About
-          </NavLink>
-          <NavLink
-            onClick={() => setVisible(false)}
-            className="py-2 pl-6 border"
-            to="/contact"
-          >
-            Contact
-          </NavLink>
+          <NavLink onClick={() => setVisible(false)} className="py-2 pl-6 border" to="/">Home</NavLink>
+          <NavLink onClick={() => setVisible(false)} className="py-2 pl-6 border" to="/collection">Collection</NavLink>
+          <NavLink onClick={() => setVisible(false)} className="py-2 pl-6 border" to="/about">About</NavLink>
+          <NavLink onClick={() => setVisible(false)} className="py-2 pl-6 border" to="/contact">Contact</NavLink>
         </div>
       </div>
     </div>
